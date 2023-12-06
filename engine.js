@@ -19,7 +19,7 @@ PLAYER_NONE  = 2
 DEFAULT_BOARD_WIDTH  = 8
 DEFAULT_BOARD_HEIGHT = 8
 
-class Tile{
+class Tile {
 	constructor(owner, piece) {
 		this.owner = owner
 		this.piece = piece
@@ -52,6 +52,40 @@ Tile.prototype.toString = function tile_to_string() {
 	}
 	console.log('[ERROR] Tile stringification: owner is ' + this.owner + ', piece is ' + this.piece)
 	return '?'
+}
+
+class Board {
+	constructor(board_width, board_height) {
+		this.tiles = make_board()
+		this.width = board_width
+		this.height = board_height
+	}
+}
+
+Board.prototype.toString = function() {
+	res = ''
+	for (let i = 0; i < this.height; ++i) {
+		for (let j = 0; j < this.width; ++j) {
+			res += this.tiles[this.height - i - 1][j].toString()
+		}
+		res += '\n'
+	}
+	return res
+}
+
+class PlayerInfo {
+	constructor() {
+		this.short_castling_available = true
+		this.long_castling_available = true
+	}
+}
+
+class Game {
+	constructor() {
+		this.board = Board()
+		this.white_player_info = PlayerInfo()
+		this.black_player_info = PlayerInfo()
+	}
 }
 
 function make_empty_board(board_width, board_height) {
@@ -91,14 +125,5 @@ function make_board() {
 	return res
 }
 
-function print_board(board, board_width, board_height) {
-	for (let i = 0; i < board_height; ++i) {
-		for (let j = 0; j < board_width; ++j) {
-			process.stdout.write(board[board_height - i - 1][j].toString())
-		}
-		console.log()
-	}
-}
-
-board = make_board(DEFAULT_BOARD_WIDTH, DEFAULT_BOARD_HEIGHT)
-print_board(board, DEFAULT_BOARD_WIDTH, DEFAULT_BOARD_HEIGHT)
+board = new Board(DEFAULT_BOARD_WIDTH, DEFAULT_BOARD_HEIGHT)
+console.log(board.toString())
