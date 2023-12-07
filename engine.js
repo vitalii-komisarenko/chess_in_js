@@ -345,6 +345,83 @@ function test_misc_at_starting_position() {
 	}
 }
 
+function test_knight_moves() {
+	input_str = '........ \
+	             ........ \
+	             ........ \
+	             ........ \
+	             ........ \
+	             ........ \
+	             ........ \
+	             N.......'
+	board = Board.fromString(input_str)
+	assert.deepEqual(board.movesFromPosition(0, 0).sort(), [
+		new OrdinaryMove([0, 0], [2, 1]),
+		new OrdinaryMove([0, 0], [1, 2]),
+	])
+
+	input_str = '........ \
+	             ........ \
+	             ........ \
+	             ........ \
+	             ........ \
+	             .N...... \
+	             ........ \
+	             N.......'
+	board = Board.fromString(input_str)
+	assert.deepEqual(board.movesFromPosition(0, 0).sort(), [
+		new OrdinaryMove([0, 0], [1, 2]),
+	])
+
+	input_str = '........ \
+	             ........ \
+	             ........ \
+	             ........ \
+	             ........ \
+	             .n...... \
+	             ........ \
+	             N.......'
+	board = Board.fromString(input_str)
+	assert.deepEqual(board.movesFromPosition(0, 0), [
+		new OrdinaryMove([0, 0], [2, 1]),
+		new OrdinaryMove([0, 0], [1, 2]),
+	])
+
+	input_str = '.......n \
+	             .....N.. \
+	             ........ \
+	             ........ \
+	             ........ \
+	             ........ \
+	             ........ \
+	             ........'
+	board = Board.fromString(input_str)
+	assert.deepEqual(board.movesFromPosition(7, 7), [
+		new OrdinaryMove([7, 7], [5, 6]),
+		new OrdinaryMove([7, 7], [6, 5]),
+	])
+
+	input_str = '........ \
+	             ........ \
+	             ........ \
+	             ........ \
+	             ....n... \
+	             ........ \
+	             ........ \
+	             ........'
+	board = Board.fromString(input_str)
+	assert.deepEqual(board.movesFromPosition(3, 4), [
+		new OrdinaryMove([3, 4], [1, 3]),
+		new OrdinaryMove([3, 4], [2, 2]),
+		new OrdinaryMove([3, 4], [1, 5]),
+		new OrdinaryMove([3, 4], [2, 6]),
+		new OrdinaryMove([3, 4], [5, 3]),
+		new OrdinaryMove([3, 4], [4, 2]),
+		new OrdinaryMove([3, 4], [5, 5]),
+		new OrdinaryMove([3, 4], [4, 6]),
+	])
+}
+
 class PlayerInfo {
 	constructor() {
 		this.short_castling_available = true
@@ -363,6 +440,7 @@ class Game {
 function run_all_tests() {
 	test_board_from_string_default_board()
 	test_misc_at_starting_position()
+	test_knight_moves()
 }
 
 board = new Board(DEFAULT_BOARD_WIDTH, DEFAULT_BOARD_HEIGHT)
