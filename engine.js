@@ -132,6 +132,85 @@ Board.prototype.toString = function() {
 	return res
 }
 
+Board.prototype.coordinatesAreInsideBoard = function(rank, file) {
+	return (rank >= 0) && (rank < this.height) && (file >= 0) && (file < this.width)
+}
+
+Board.prototype.movesFromPosition = function(rank, file) {
+	tile = this.tiles[rank][file]
+
+	if (tile.owner == PLAYER_NONE) {
+		return []
+	}
+
+	if (tile.owner == PLAYER_WHITE) {
+		player = PLAYER_WHITE
+		opponent = PLAYER_BLACK
+	}
+	else {
+		player = PLAYER_BLACK
+		opponent = PLAYER_WHITE
+	}
+
+	res = []
+
+	if (tile.piece == PIECE_KNIGHT) {
+		candidates = [
+			[rank - 2, file - 1],
+			[rank - 1, file - 2],
+			[rank - 2, file + 1],
+			[rank - 1, file + 2],
+			[rank + 2, file - 1],
+			[rank + 1, file - 2],
+			[rank + 2, file + 1],
+			[rank + 1, file + 2],
+		]
+
+		for (const c of candidates) {
+			to_rank, to_file = c
+			if (!this.coordinatesAreInsideBoard(to_rank, to_file)) {
+				continue
+			}
+			if (this.tiles[to_file][to_file].owner == player) {
+				continue
+			}
+			res.push(OrdinaryMove([rank, file], [to_rank, to_file]))
+		}
+	}
+	else if (tile.piece == PIECE_KING) {
+		candidates = [
+			[rank - 1, file - 1],
+			[rank - 1, file    ],
+			[rank - 1, file + 1],
+			[rank    , file - 1],
+			[rank    , file + 1],
+			[rank + 1, file - 1],
+			[rank + 1, file    ],
+			[rank + 1, file + 1],
+		]
+
+		for (const c of candidates) {
+			to_rank, to_file = c
+			if (!this.coordinatesAreInsideBoard(to_rank, to_file)) {
+				continue
+			}
+			if (this.tiles[to_file][to_file].owner == player) {
+				continue
+			}
+			res.push(OrdinaryMove([rank, file], [to_rank, to_file]))
+		}
+	}
+
+	return res
+}
+
+class OrdinaryMove {
+	constructor(from, to) {
+		this.from = from
+		this.to = to
+	}
+}
+
 function test_board_from_string_default_board() {
 	input_str = 'rnbqkbnr \
 	             pppppppp \
