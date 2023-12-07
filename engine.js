@@ -239,7 +239,33 @@ Board.prototype.movesFromPosition = function(rank, file) {
 			if (this.tiles[to_rank][to_file].owner == player) {
 				continue
 			}
-			res.push(OrdinaryMove([rank, file], [to_rank, to_file]))
+			res.push(new OrdinaryMove([rank, file], [to_rank, to_file]))
+		}
+	}
+	else if (tile.piece == PIECE_PAWN) {
+		if (player == PLAYER_WHITE) {
+			candidates = [[rank + 1, file]]
+			if ((rank == 1) && (this.tiles[rank + 1][file].owner == PLAYER_NONE)) {
+				candidates.push([rank + 2, file])
+			}
+			for (const c of candidates) {
+				[to_rank, to_file] = c
+				if (this.tiles[to_rank][to_file].owner == PLAYER_NONE) {
+					res.push(new OrdinaryMove([rank, file], [to_rank, to_file]))
+				}
+			}
+		}
+		else {
+			candidates = [[rank - 1, file]]
+			if ((rank == 6) && (this.tiles[rank - 1][file].owner == PLAYER_NONE)) {
+				candidates.push([rank - 2, file])
+			}
+			for (const c of candidates) {
+				[to_rank, to_file] = c
+				if (this.tiles[to_rank][to_file].owner == PLAYER_NONE) {
+					res.push(new OrdinaryMove([rank, file], [to_rank, to_file]))
+				}
+			}
 		}
 	}
 
@@ -307,9 +333,9 @@ function test_misc_at_starting_position() {
 		new OrdinaryMove([1, 4], [2, 4]),
 		new OrdinaryMove([1, 4], [3, 4]),
 	])
-	assert.deepEqual(board.movesFromPosition(7, 4), [
-		new OrdinaryMove([7, 4], [6, 4]),
-		new OrdinaryMove([7, 4], [5, 4]),
+	assert.deepEqual(board.movesFromPosition(6, 4), [
+		new OrdinaryMove([6, 4], [5, 4]),
+		new OrdinaryMove([6, 4], [4, 4]),
 	])
 
 	// test that the other pieces cannot move in the starting position
