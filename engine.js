@@ -209,14 +209,14 @@ Board.prototype.movesFromPosition = function(rank, file) {
 		]
 
 		for (const c of candidates) {
-			to_rank, to_file = c
+			[to_rank, to_file] = c
 			if (!this.coordinatesAreInsideBoard(to_rank, to_file)) {
 				continue
 			}
-			if (this.tiles[to_file][to_file].owner == player) {
+			if (this.tiles[to_rank][to_file].owner == player) {
 				continue
 			}
-			res.push(OrdinaryMove([rank, file], [to_rank, to_file]))
+			res.push(new OrdinaryMove([rank, file], [to_rank, to_file]))
 		}
 	}
 	else if (tile.piece == PIECE_KING) {
@@ -232,11 +232,11 @@ Board.prototype.movesFromPosition = function(rank, file) {
 		]
 
 		for (const c of candidates) {
-			to_rank, to_file = c
+			[to_rank, to_file] = c
 			if (!this.coordinatesAreInsideBoard(to_rank, to_file)) {
 				continue
 			}
-			if (this.tiles[to_file][to_file].owner == player) {
+			if (this.tiles[to_rank][to_file].owner == player) {
 				continue
 			}
 			res.push(OrdinaryMove([rank, file], [to_rank, to_file]))
@@ -290,6 +290,35 @@ function test_board_from_string_default_board() {
 	}
 }
 
+function test_misc_at_starting_position() {
+	board = Board.defaultBoard()
+
+	// test that there is no available moves from empty tile
+	assert.deepEqual(board.movesFromPosition(3, 4), [])
+
+	// test the moves of the knight in the starting position
+	assert.deepEqual(board.movesFromPosition(0, 1), [
+		new OrdinaryMove([0, 1], [2, 0]),
+		new OrdinaryMove([0, 1], [2, 2]),
+	])
+
+	// test the pawn moves
+	assert.deepEqual(board.movesFromPosition(1, 4), [
+		new OrdinaryMove([1, 4], [2, 4]),
+		new OrdinaryMove([1, 4], [3, 4]),
+	])
+	assert.deepEqual(board.movesFromPosition(7, 4), [
+		new OrdinaryMove([7, 4], [6, 4]),
+		new OrdinaryMove([7, 4], [5, 4]),
+	])
+
+	// test that the other pieces cannot move in the starting position
+	for (const file of [0, 2, 3, 4, 5, 7]) {
+		assert.deepEqual(board.movesFromPosition(0, file), [])
+		assert.deepEqual(board.movesFromPosition(7, file), [])
+	}
+}
+
 class PlayerInfo {
 	constructor() {
 		this.short_castling_available = true
@@ -307,6 +336,7 @@ class Game {
 
 function run_all_tests() {
 	test_board_from_string_default_board()
+	test_misc_at_starting_position()
 }
 
 board = new Board(DEFAULT_BOARD_WIDTH, DEFAULT_BOARD_HEIGHT)
