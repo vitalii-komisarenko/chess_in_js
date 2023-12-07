@@ -178,6 +178,42 @@ Board.prototype.coordinatesAreInsideBoard = function(rank, file) {
 	return (rank >= 0) && (rank < this.height) && (file >= 0) && (file < this.width)
 }
 
+Board.prototype.iterateMoves = function(player, rank, file, delta_rank, delta_file) {
+	/**
+	 @brief A helper function to iterate valid moves for bishops, rooks and queens
+
+	 @return An array of moves
+	 */
+
+	starting_rank = rank
+	starting_file = file
+	res = []
+
+	while (true) {
+		rank += delta_rank
+		file += delta_file
+
+		// out of board
+		if (!this.coordinatesAreInsideBoard(rank, file)) {
+			break
+		}
+
+		// a piece of the same color
+		if (this.tiles[rank][file].owner == player) {
+			break
+		}
+
+		// empty tile or the opponent's piece
+		res.push(new OrdinaryMove([starting_rank, starting_file], [rank, file]))
+
+		// the opponent's piece
+		if (this.tiles[rank][file].owner != PLAYER_NONE) {
+			break
+		}
+	}
+	return res
+}
+
 Board.prototype.movesFromPosition = function(rank, file) {
 	tile = this.tiles[rank][file]
 
@@ -292,6 +328,33 @@ Board.prototype.movesFromPosition = function(rank, file) {
 					res.push(new OrdinaryMove([rank, file], [to_rank, to_file]))
 				}
 			}
+		}
+	}
+	else {
+		can_go_straight = ((tile.piece == PIECE_ROOK)   || (tile.piece == PIECE_QUEEN))
+		can_go_diagonal = ((tile.piece == PIECE_BISHOP) || (tile.piece == PIECE_QUEEN))
+
+		deltas = []
+		if (can_go_straight) {
+			deltas = deltas.concat([
+				[0, -1],
+				[0, 1],
+				[-1, 0],
+				[1, 0],
+			])
+		}
+		if (can_go_diagonal) {
+			deltas = deltas.concat([
+				[-1, -1],
+				[-1, 1],
+				[1, -1],
+				[1, 1],
+			])
+		}
+
+		for (delta of deltas) {
+			[delta_rank, delta_file] = delta
+			res = res.concat(this.iterateMoves(player, rank, file, delta_rank, delta_file))
 		}
 	}
 
