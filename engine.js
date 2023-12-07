@@ -422,6 +422,30 @@ function test_knight_moves() {
 	])
 }
 
+function test_pawn_moves() {
+	input_str = '........ \
+	             ...p.... \
+	             ...p.... \
+	             .......P \
+	             ....p... \
+	             P...P... \
+	             ........ \
+	             ........'
+	board = Board.fromString(input_str)
+	assert.deepEqual(board.movesFromPosition(2, 0), [
+		new OrdinaryMove([2, 0], [3, 0]),
+	])
+	assert.deepEqual(board.movesFromPosition(2, 4), [])
+	assert.deepEqual(board.movesFromPosition(3, 4), [])
+	assert.deepEqual(board.movesFromPosition(4, 7), [
+		new OrdinaryMove([4, 7], [5, 7]),
+	])
+	assert.deepEqual(board.movesFromPosition(5, 3), [
+		new OrdinaryMove([5, 3], [4, 3]),
+	])
+	assert.deepEqual(board.movesFromPosition(6, 3), [])
+}
+
 class PlayerInfo {
 	constructor() {
 		this.short_castling_available = true
@@ -440,6 +464,7 @@ class Game {
 function run_all_tests() {
 	test_board_from_string_default_board()
 	test_misc_at_starting_position()
+	test_pawn_moves()
 	test_knight_moves()
 }
 
