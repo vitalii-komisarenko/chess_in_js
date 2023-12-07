@@ -254,6 +254,19 @@ Board.prototype.movesFromPosition = function(rank, file) {
 					res.push(new OrdinaryMove([rank, file], [to_rank, to_file]))
 				}
 			}
+			candidates = [
+				[rank + 1, file - 1],
+				[rank + 1, file + 1],
+			]
+			for (const c of candidates) {
+				[to_rank, to_file] = c
+				if (!this.coordinatesAreInsideBoard(to_rank, to_file)) {
+					continue
+				}
+				if (this.tiles[to_rank][to_file].owner == PLAYER_BLACK) {
+					res.push(new OrdinaryMove([rank, file], [to_rank, to_file]))
+				}
+			}
 		}
 		else {
 			candidates = [[rank - 1, file]]
@@ -263,6 +276,19 @@ Board.prototype.movesFromPosition = function(rank, file) {
 			for (const c of candidates) {
 				[to_rank, to_file] = c
 				if (this.tiles[to_rank][to_file].owner == PLAYER_NONE) {
+					res.push(new OrdinaryMove([rank, file], [to_rank, to_file]))
+				}
+			}
+			candidates = [
+				[rank - 1, file - 1],
+				[rank - 1, file + 1],
+			]
+			for (const c of candidates) {
+				[to_rank, to_file] = c
+				if (!this.coordinatesAreInsideBoard(to_rank, to_file)) {
+					continue
+				}
+				if (this.tiles[to_rank][to_file].owner == PLAYER_WHITE) {
 					res.push(new OrdinaryMove([rank, file], [to_rank, to_file]))
 				}
 			}
