@@ -368,6 +368,34 @@ class OrdinaryMove {
 	}
 }
 
+function sortMoves(a, b) {
+	if (a.from[0] < b.from[0]) {
+		return 1
+	}
+	if (a.from[0] > b.from[0]) {
+		return -1
+	}
+	if (a.from[1] < b.from[1]) {
+		return 1
+	}
+	if (a.from[1] > b.from[1]) {
+		return -1
+	}
+	if (a.to[0] < b.to[0]) {
+		return 1
+	}
+	if (a.to[0] > b.to[0]) {
+		return -1
+	}
+	if (a.to[1] < b.to[1]) {
+		return 1
+	}
+	if (a.to[1] > b.to[1]) {
+		return -1
+	}
+	return 0
+}
+
 function test_board_from_string_default_board() {
 	input_str = 'rnbqkbnr \
 	             pppppppp \
