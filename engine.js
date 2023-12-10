@@ -368,7 +368,78 @@ class OrdinaryMove {
 	}
 }
 
-function sortMoves(a, b) {
+function movesFromString(str, board_width = DEFAULT_BOARD_WIDTH, board_height = DEFAULT_BOARD_HEIGHT) {
+	/**
+	 * @brief Get moves from a human-readable string
+	 *
+	 * 'X' means move to this position is possible
+	 * '.' means move to this position is not possible
+	 * 'o' means the original position
+	 * whitespace is ignored
+	 *
+	 * E.g. for a knight it looks like this:
+	 * ........
+	 * ...X.X..
+	 * ..X...X.
+	 * ....o...
+	 * ..X...X.
+	 * ...X.X..
+	 * ........
+	 * ........
+	 */
+
+	// ignore whitespace
+	str = str.replace(/\s/g, '')
+
+	let target_positions = []
+
+	for (let i = 0; i < str.length; ++i) {
+		let rank_from_top = Math.floor(i / board_width)
+		let rank = board_height - rank_from_top - 1
+		let file = i % board_height
+		switch (str.charAt(i)) {
+		case 'X': {
+			target_positions.push([rank, file])
+			continue
+		}
+		case 'o':
+			var starting_rank = rank
+			var starting_file = file
+			continue
+		}
+	}
+
+	res = []
+	for (target_position of target_positions) {
+		res.push(new OrdinaryMove([starting_rank, starting_file], target_position))
+	}
+	return res
+}
+
+function test_movesFromString() {
+	input_str = '........ \
+	             ........ \
+	             ...X.X.. \
+	             ..X...X. \
+	             ....o... \
+	             ..X...X. \
+	             ...X.X.. \
+	             ........'
+	actual = movesFromString(input_str).sort(compareMoves)
+	expected = [
+		new OrdinaryMove([3, 4], [1, 3]),
+		new OrdinaryMove([3, 4], [1, 5]),
+		new OrdinaryMove([3, 4], [2, 2]),
+		new OrdinaryMove([3, 4], [2, 6]),
+		new OrdinaryMove([3, 4], [4, 2]),
+		new OrdinaryMove([3, 4], [4, 6]),
+		new OrdinaryMove([3, 4], [5, 3]),
+		new OrdinaryMove([3, 4], [5, 5]),
+	].sort(compareMoves)
+	assert.deepEqual(actual, expected)
+}
+
+function compareMoves(a, b) {
 	if (a.from[0] < b.from[0]) {
 		return 1
 	}
@@ -579,6 +650,7 @@ class Game {
 }
 
 function run_all_tests() {
+	test_movesFromString()
 	test_board_from_string_default_board()
 	test_misc_at_starting_position()
 	test_pawn_moves()
