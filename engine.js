@@ -361,11 +361,42 @@ Board.prototype.movesFromPosition = function(rank, file) {
 	return res
 }
 
+Board.prototype.kingUnderCheck = function(player, king_rank, king_file) {
+	for (let rank = 0; rank < this.height; ++rank) {
+		for (let file = 0; file < this.width; ++file) {
+			tile = this.tiles[rank][file]
+			if ((tile.owner == PLAYER_NONE) || (tile.owner == player)) {
+				continue
+			}
+			for (let move of this.movesFromPosition(rank, file)) {
+				if ((move.to[0] == king_rank) && (move.to[1] == king_file)) {
+					return true
+				}
+			}
+		}
+	}
+	return false
+}
+
 class OrdinaryMove {
 	constructor(from, to) {
 		this.from = from
 		this.to = to
 	}
+}
+
+function test_kingUnderCheck() {
+	input_str = '........ \
+	             ..r..... \
+	             .....K.. \
+	             ........ \
+	             ........ \
+	             .k...... \
+	             ........ \
+	             N.......'
+	board = Board.fromString(input_str)
+	assert.equal(board.kingUnderCheck(PLAYER_BLACK, 2, 1), true)
+	assert.equal(board.kingUnderCheck(PLAYER_WHITE, 5, 5), false)
 }
 
 function movesFromString(str, board_width = DEFAULT_BOARD_WIDTH, board_height = DEFAULT_BOARD_HEIGHT) {
@@ -650,6 +681,7 @@ class Game {
 }
 
 function run_all_tests() {
+	test_kingUnderCheck()
 	test_movesFromString()
 	test_board_from_string_default_board()
 	test_misc_at_starting_position()
