@@ -601,6 +601,9 @@ function test_misc_at_starting_position() {
 		assert.deepEqual(board.movesFromPosition(0, file), [])
 		assert.deepEqual(board.movesFromPosition(7, file), [])
 	}
+
+	//
+	assert.equal(board.assessPosition(), 0)
 }
 
 function test_knight_moves() {
