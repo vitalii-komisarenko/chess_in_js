@@ -405,6 +405,9 @@ Board.prototype.assessPosition = function() {
 				var value = 9
 				continue
 			}
+			default: {
+				var value = 0
+			}
 			}
 
 			sign = (tile.owner == PLAYER_WHITE) ? 1 : -1
