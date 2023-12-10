@@ -378,6 +378,42 @@ Board.prototype.kingUnderCheck = function(player, king_rank, king_file) {
 	return false
 }
 
+Board.prototype.assessPosition = function() {
+	let res = 0
+	for (let rank = 0; rank < this.height; ++rank) {
+		for (let file = 0; file < this.width; ++file) {
+			tile = this.tiles[rank][file]
+			if (tile.owner == PLAYER_NONE) {
+				continue
+			}
+
+			switch (tile.piece) {
+			case PIECE_PAWN: {
+				var value = 1
+				continue
+			}
+			case PIECE_ROOK: {
+				var value = 5
+				continue
+			}
+			case PIECE_KNIGHT:
+			case PIECE_BISHOP: {
+				var value = 3
+				continue
+			}
+			case PIECE_QUEEN: {
+				var value = 9
+				continue
+			}
+			}
+
+			sign = (tile.owner == PLAYER_WHITE) ? 1 : -1
+			res += sign * value
+		}
+	}
+	return res
+}
+
 class OrdinaryMove {
 	constructor(from, to) {
 		this.from = from
