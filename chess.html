@@ -1,0 +1,23 @@
+<html>
+    <script>
+        function chessboardtable(rows, columns) {
+            html = "";
+            for (let row = 0; row < rows; ++row) {
+                html += "<tr>";
+                for (let column = 0; column < columns; ++column) {
+                    html += "<td>x</td>";
+                }
+                html += "</tr>";
+            }
+            document.getElementById("chessboardtable").innerHTML = html;
+        }
+
+        window.onload = function() {
+            chessboardtable(8, 8)
+        }
+    </script>
+    <body>
+    <table id=chessboardtable>
+    </table>
+    </body>
+</html>
