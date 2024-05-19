@@ -1,11 +1,15 @@
 <html>
+    <head>
+        <link rel="stylesheet" href="chess.css">
+    </head>
     <script>
         function chessboardtable(rows, columns) {
             html = "";
             for (let row = 0; row < rows; ++row) {
                 html += "<tr>";
                 for (let column = 0; column < columns; ++column) {
-                    html += "<td>x</td>";
+                    style = (column + row) % 2 ? "dark_square" : "light_square";
+                    html += '<td class="' + style + '">x</td>';
                 }
                 html += "</tr>";
             }
